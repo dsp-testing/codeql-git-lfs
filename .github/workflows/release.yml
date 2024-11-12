@@ -108,7 +108,7 @@ jobs:
       with:
         name: linux-assets
         path: bin/releases
-build-main:
+  build-main:
     name: Main Release Assets
     needs:
       - build-windows
