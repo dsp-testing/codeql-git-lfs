@@ -6,54 +6,54 @@ env:
   GOTOOLCHAIN: local
 
 jobs:
-  build-windows:
-    name: Build Windows Assets
-    runs-on: windows-latest
-    strategy:
-      matrix:
-        go: ['1.23.x']
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - run: git fetch origin "+${GITHUB_REF}:${GITHUB_REF}"
-      shell: bash
-      # We update the current tag as the checkout step turns annotated tags
-      # into lightweight ones by accident, breaking "git describe".
-      # See https://github.com/actions/checkout/issues/882 for details.
-    - uses: ruby/setup-ruby@v1
-    - run: gem install asciidoctor
-    - run: Rename-Item -Path C:\msys64 -NewName msys64-tmp -Force
-      # We move the MSYS2 installed for Ruby aside to prevent use of its Git,
-      # which does not honour the PATH we set to our built git-lfs binary.
-    - uses: actions/setup-go@v5
-      with:
-        go-version: ${{ matrix.go }}
-    - run: mkdir -p "$HOME/go/bin"
-      shell: bash
-    - run: set GOPATH=%HOME%\go
-    - run: choco install -y InnoSetup
-    - run: choco install -y zip
-    - run: choco install -y jq
-    - run: GOPATH="$HOME/go" PATH="$HOME/go/bin:$PATH" go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo@latest
-      shell: bash
-    - uses: git-for-windows/setup-git-for-windows-sdk@v1
-      with:
-        flavor: minimal
-      # We install the SDK so as to have access to the msgfmt.exe binary
-      # from the GNU gettext package.
-    - run: mkdir -p bin/releases
-      shell: bash
-      # We clear the TMPDIR set for Ruby so mktemp and Go use the same
-      # volume for temporary files.
-    - run: PATH="$HOME/go/bin:$PATH" go generate && env -u TMPDIR make && mv bin/git-lfs.exe bin/releases/git-lfs-windows-amd64.exe
-      shell: bash
-      env:
-        GOARCH: amd64
-    - uses: actions/upload-artifact@v4
-      with:
-        name: windows-assets
-        path: bin/releases
+  # build-windows:
+  #   name: Build Windows Assets
+  #   runs-on: windows-latest
+  #   strategy:
+  #     matrix:
+  #       go: ['1.23.x']
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #     with:
+  #       fetch-depth: 0
+  #   - run: git fetch origin "+${GITHUB_REF}:${GITHUB_REF}"
+  #     shell: bash
+  #     # We update the current tag as the checkout step turns annotated tags
+  #     # into lightweight ones by accident, breaking "git describe".
+  #     # See https://github.com/actions/checkout/issues/882 for details.
+  #   - uses: ruby/setup-ruby@v1
+  #   - run: gem install asciidoctor
+  #   - run: Rename-Item -Path C:\msys64 -NewName msys64-tmp -Force
+  #     # We move the MSYS2 installed for Ruby aside to prevent use of its Git,
+  #     # which does not honour the PATH we set to our built git-lfs binary.
+  #   - uses: actions/setup-go@v5
+  #     with:
+  #       go-version: ${{ matrix.go }}
+  #   - run: mkdir -p "$HOME/go/bin"
+  #     shell: bash
+  #   - run: set GOPATH=%HOME%\go
+  #   - run: choco install -y InnoSetup
+  #   - run: choco install -y zip
+  #   - run: choco install -y jq
+  #   - run: GOPATH="$HOME/go" PATH="$HOME/go/bin:$PATH" go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo@latest
+  #     shell: bash
+  #   - uses: git-for-windows/setup-git-for-windows-sdk@v1
+  #     with:
+  #       flavor: minimal
+  #     # We install the SDK so as to have access to the msgfmt.exe binary
+  #     # from the GNU gettext package.
+  #   - run: mkdir -p bin/releases
+  #     shell: bash
+  #     # We clear the TMPDIR set for Ruby so mktemp and Go use the same
+  #     # volume for temporary files.
+  #   - run: PATH="$HOME/go/bin:$PATH" go generate && env -u TMPDIR make && mv bin/git-lfs.exe bin/releases/git-lfs-windows-amd64.exe
+  #     shell: bash
+  #     env:
+  #       GOARCH: amd64
+  #   - uses: actions/upload-artifact@v4
+  #     with:
+  #       name: windows-assets
+  #       path: bin/releases
   build-macos:
     name: Build macOS
     runs-on: macos-latest
@@ -113,7 +113,7 @@ jobs:
   build-main:
     name: Main Release Assets
     needs:
-      - build-windows
+      # - build-windows
       - build-macos
       - build-linux
     runs-on: ubuntu-latest
