@@ -173,16 +173,7 @@ release_files () {
 
   [ -n "$version" ] || return 1
 
-  find "$assets" -name '*.tar.gz' -o \
-      -name '*386*.zip' -o \
-      -name '*amd64*.zip' -o \
-      -name '*arm64*.zip' -o \
-      -name '*.exe' -o \
-      -name 'sha256sums.asc' -o \
-      -name 'hashes.asc' -o \
-      -name 'git-lfs-*' | \
-    grep -E "$version|sha256sums.asc|hashes.asc" | \
-    grep -v "assets" | \
+  find "$assets" -type f | \
     LC_ALL=C sort
 }
 
