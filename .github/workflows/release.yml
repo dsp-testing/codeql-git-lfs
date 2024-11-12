@@ -108,12 +108,14 @@ jobs:
       with:
         name: linux-assets
         path: bin/releases
-build-main:
+  build-main:
     name: Main Release Assets
     needs:
       - build-windows
       - build-macos
       - build-linux
+    runs-on: ubuntu-latest
+    steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
