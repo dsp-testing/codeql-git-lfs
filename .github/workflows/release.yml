@@ -101,19 +101,21 @@ jobs:
       env:
           DEBIAN_FRONTEND: noninteractive
     - run: mkdir -p bin/releases
-    - run: go generate && go make && mv git-lfs bin/releases/git-lfs-linux-amd64
+    - run: go generate && go build && mv git-lfs bin/releases/git-lfs-linux-amd64
       env:
         CGO_ENABLED: 0
     - uses: actions/upload-artifact@v4
       with:
         name: linux-assets
         path: bin/releases
-build-main:
+  build-main:
     name: Main Release Assets
     needs:
       - build-windows
       - build-macos
       - build-linux
+    runs-on: ubuntu-latest
+    steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
