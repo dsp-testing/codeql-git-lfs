@@ -2,7 +2,7 @@
 
 set -e
 
-REPO="git-lfs/git-lfs"
+REPO="redsun82/git-lfs"
 WORKDIR="$(mktemp -d)"
 
 trap 'rm -fr "$WORKDIR"' EXIT
