@@ -74,6 +74,8 @@ categorize_asset () {
       echo "Source";;
     git-lfs-windows-v*.*.*.exe)
       echo "Windows Installer";;
+    git-lfs-*)
+      echo "Executable";;
     sha256sums)
       echo "Unsigned SHA-256 Hashes";;
     sha256sums.asc)
@@ -96,10 +98,10 @@ content_type () {
       echo "application/zip";;
     *.tar.gz)
       echo "application/gzip";;
-    *.exe)
-      echo "application/octet-stream";;
     *.asc|sha256sums*|hashes*)
       echo "text/plain";;
+    *)
+      echo "application/octet-stream";;
   esac
 }
 
@@ -177,7 +179,8 @@ release_files () {
       -name '*arm64*.zip' -o \
       -name '*.exe' -o \
       -name 'sha256sums.asc' -o \
-      -name 'hashes.asc' | \
+      -name 'hashes.asc' -o \
+      -name 'git-lfs-*' | \
     grep -E "$version|sha256sums.asc|hashes.asc" | \
     grep -v "assets" | \
     LC_ALL=C sort
