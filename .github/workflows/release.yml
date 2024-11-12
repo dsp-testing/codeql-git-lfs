@@ -46,7 +46,7 @@ jobs:
       shell: bash
       # We clear the TMPDIR set for Ruby so mktemp and Go use the same
       # volume for temporary files.
-    - run: PATH="$HOME/go/bin:$PATH" GOARCH=amd64 go generate && env -u TMPDIR make && mv git-lfs.exe bin/releases/git-lfs-windows-amd64.exe
+    - run: PATH="$HOME/go/bin:$PATH" GOARCH=amd64 go generate && env -u TMPDIR make && mv bin/git-lfs.exe bin/releases/git-lfs-windows-amd64.exe
       shell: bash
     - uses: actions/upload-artifact@v4
       with:
