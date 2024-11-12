@@ -46,8 +46,10 @@ jobs:
       shell: bash
       # We clear the TMPDIR set for Ruby so mktemp and Go use the same
       # volume for temporary files.
-    - run: PATH="$HOME/go/bin:$PATH" GOARCH=amd64 go generate && env -u TMPDIR make && mv bin/git-lfs.exe bin/releases/git-lfs-windows-amd64.exe
+    - run: PATH="$HOME/go/bin:$PATH" go generate && env -u TMPDIR make && mv bin/git-lfs.exe bin/releases/git-lfs-windows-amd64.exe
       shell: bash
+      env:
+        GOARCH: amd64
     - uses: actions/upload-artifact@v4
       with:
         name: windows-assets
@@ -70,11 +72,11 @@ jobs:
         go-version: ${{ matrix.go }}
     - run: brew install gettext
     - run: mkdir -p bin/releases
-    - run: go generate && go build && mv git-lfs bin/releases/git-lfs-darwin-amd64
+    - run: go generate && make && mv bin/git-lfs bin/releases/git-lfs-darwin-amd64
       env:
           GOARCH: amd64
     - run: mkdir -p bin/releases/macos/arm64
-    - run: go generate && go build && mv git-lfs bin/releases/git-lfs-darwin-arm64
+    - run: go generate && make && mv bin/git-lfs bin/releases/git-lfs-darwin-arm64
       env:
           GOARCH: arm64
     - uses: actions/upload-artifact@v4
@@ -101,7 +103,7 @@ jobs:
       env:
           DEBIAN_FRONTEND: noninteractive
     - run: mkdir -p bin/releases
-    - run: go generate && go build && mv git-lfs bin/releases/git-lfs-linux-amd64
+    - run: go generate && make && mv bin/git-lfs bin/releases/git-lfs-linux-amd64
       env:
         CGO_ENABLED: 0
     - uses: actions/upload-artifact@v4
