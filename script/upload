@@ -75,7 +75,7 @@ categorize_asset () {
     git-lfs-windows-v*.*.*.exe)
       echo "Windows Installer";;
     git-lfs-*)
-      echo "Executable";;
+      echo "$file";;
     sha256sums)
       echo "Unsigned SHA-256 Hashes";;
     sha256sums.asc)
@@ -173,16 +173,7 @@ release_files () {
 
   [ -n "$version" ] || return 1
 
-  find "$assets" -name '*.tar.gz' -o \
-      -name '*386*.zip' -o \
-      -name '*amd64*.zip' -o \
-      -name '*arm64*.zip' -o \
-      -name '*.exe' -o \
-      -name 'sha256sums.asc' -o \
-      -name 'hashes.asc' -o \
-      -name 'git-lfs-*' | \
-    grep -E "$version|sha256sums.asc|hashes.asc" | \
-    grep -v "assets" | \
+  find "$assets" -type f | \
     LC_ALL=C sort
 }
 
@@ -196,15 +187,6 @@ finalize_body_message () {
   version=$(echo "$version" | sed -e 's/^v//')
 
   cat "$changelog" > "$WORKDIR/body-template"
-  cat <<EOM >> "$WORKDIR/body-template"
-## Packages
-
-Up to date packages are available on [PackageCloud](https://packagecloud.io/github/git-lfs) and [Homebrew](http://brew.sh/).
-
-$(script/distro-tool --distro-markdown)
-
-## SHA-256 hashes:
-EOM
 
   shasum -a256 $(release_files "$version" "$assets") | \
     ruby -pe '$_.chomp!' \
