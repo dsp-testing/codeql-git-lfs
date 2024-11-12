@@ -2,7 +2,7 @@
 
 set -e
 
-REPO="redsun82/git-lfs"
+REPO="dsp-testing/codeql-git-lfs"
 WORKDIR="$(mktemp -d)"
 
 trap 'rm -fr "$WORKDIR"' EXIT
@@ -113,7 +113,7 @@ format_release_json () {
   ruby -rjson -e 'puts JSON.generate({
     tag_name: ARGV[0],
     name: ARGV[0],
-    draft: true,
+    draft: false,
     body: File.read(ARGV[1]),
   })' "$version" "$bodyfile"
 }
